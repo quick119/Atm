@@ -1,10 +1,16 @@
 package com.quick.atm;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -121,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
             case R.drawable.func_finance:
                 break;
             case R.drawable.func_contacts:
+                Intent contacts = new Intent(this, ContactActivity.class);
+                startActivity(contacts);
                 break;
             case R.drawable.func_exit:
                 finish();
