@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class ContactActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_CONTACTS = 80;
     private static final String TAG = ContactActivity.class.getSimpleName();
+    private List<Contact> contacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,14 @@ public class ContactActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_upload) {
             //upload to Firebase
             Log.d(TAG, "onOptionsItemSelected:");
+            String userid = getSharedPreferences("atm", MODE_PRIVATE)
+                    .getString("USERID", null);
+            if (userid != null) {
+                FirebaseDatabase.getInstance().getReference("users")
+                        .child(userid)
+                        .child("contacts")
+                        .setValue(contacts);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -68,7 +79,7 @@ public class ContactActivity extends AppCompatActivity {
         //read contacts
         Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
-        List<Contact> contacts = new ArrayList<>();
+        contacts = new ArrayList<>();
         while(cursor.moveToNext()){
             int id = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts._ID));
             String name = cursor.getString(
