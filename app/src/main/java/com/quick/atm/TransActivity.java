@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,11 +60,25 @@ public class TransActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String json = response.body().string();
+                final String json = response.body().string();
                 Log.d(TAG, "onResponse:" + json);
-                parseJSON(json);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        parseJSON(json);
+                        parseGSON(json);
+                    }
+                });
             }
         });
+    }
+
+    private void parseGSON(String json) {
+        Gson gson = new Gson();
+        transactions = gson.fromJson(json,
+                new TypeToken<ArrayList<Transaction>>(){}.getType());
+        TransAdapter adapter = new TransAdapter();
+        recyclerView.setAdapter(adapter);
     }
 
     private void parseJSON(String json) {
@@ -76,8 +93,6 @@ public class TransActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        TransAdapter adapter = new TransAdapter();
-        recyclerView.setAdapter(adapter);
     }
 
     public class TransAdapter extends RecyclerView.Adapter<TransAdapter.TransHolder> {
@@ -114,8 +129,8 @@ public class TransActivity extends AppCompatActivity {
 
             public void bindTo(Transaction tran) {
                 dateText.setText(tran.getDate());
-                amountText.setText(tran.getAmount());
-                typeText.setText(tran.getType());
+                amountText.setText(String.valueOf(tran.getAmount()));
+                typeText.setText(String.valueOf(tran.getType()));
             }
         }
     }
