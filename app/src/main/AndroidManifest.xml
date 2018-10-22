@@ -33,6 +33,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddActivity" />
         <activity android:name=".TransActivity"></activity>
+        <service android:name=".HelloService"/>
     </application>
 
 </manifest>
